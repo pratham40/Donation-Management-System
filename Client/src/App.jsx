@@ -1,11 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import Login from './Pages/Login';
-import SignUp from './Pages/SignUp';
+import { Route,Routes } from 'react-router-dom';
+
+import ContactUs from './Pages/ContactUs';
 import Home from './Pages/Home';
+import Login from './Pages/Login';
 import NotFound from './Pages/NotFound';
 import PrivacyPolicy from './Pages/PrivacyPolicy';
+import SignUp from './Pages/SignUp';
 import TermsOfService from './Pages/TermsOfService';
-import ContactUs from './Pages/ContactUs';
 
 const App = () => (
     <Routes>
