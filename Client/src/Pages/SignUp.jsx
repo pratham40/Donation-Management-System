@@ -38,6 +38,13 @@ const SignUp = () => {
 
               <div className="form-control w-full max-w-xs mb-4">
                 <label className="label">
+                  <span className="label-text">Age</span>
+                </label>
+                <input type="number" placeholder="Enter your age" className="input input-bordered w-full max-w-xs" />
+              </div>
+
+              <div className="form-control w-full max-w-xs mb-4">
+                <label className="label">
                   <span className="label-text">Password</span>
                 </label>
                 <input type="password" placeholder="Enter your password" className="input input-bordered w-full max-w-xs" />
