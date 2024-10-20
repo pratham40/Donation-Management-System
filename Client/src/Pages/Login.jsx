@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
+import { FiEye, FiEyeOff,FiLock, FiUser } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { FiUser, FiLock } from 'react-icons/fi';
+
 import HomeLayout from '../Layouts/HomeLayout';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle login logic here
     console.log('Login attempt with:', { email, password });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -44,13 +50,20 @@ const Login = () => {
                 <div className="relative">
                   <FiLock className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400" />
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="input input-bordered w-full max-w-xs pl-10"
+                    className="input input-bordered w-full max-w-xs pl-10 pr-10"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  <button
+                    type="button"
+                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </button>
                 </div>
               </div>
 
