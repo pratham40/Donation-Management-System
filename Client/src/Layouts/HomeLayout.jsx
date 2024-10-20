@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FiMenu, FiSun, FiMoon } from 'react-icons/fi';
 import { AiFillCloseCircle } from 'react-icons/ai';
 
-const HomeLayout = () => {
+const HomeLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'light';
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+      return newTheme;
+    });
   };
 
   const toggleSidebar = () => {
@@ -30,6 +38,11 @@ const HomeLayout = () => {
     drawerSide[0].style.width = '0px';
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+    hideDrawer();
+  };
+
   return (
     <div className="min-h-[90vh] bg-base-200">
       <div className="drawer h-[100vh]">
@@ -43,19 +56,19 @@ const HomeLayout = () => {
               </label>
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-primary">Donation Management System</h1>
+              <h1 className="text-2xl font-bold text-primary">FundMate</h1>
             </div>
             <div className="flex-none gap-2">
               <button onClick={toggleTheme} className="btn btn-ghost btn-circle">
                 {theme === 'light' ? <FiMoon size={"24px"} /> : <FiSun size={"24px"} />}
               </button>
-              <Link to="/login" className="btn btn-ghost text-primary">Login</Link>
+              <button onClick={() => handleNavigation('/login')} className="btn btn-ghost text-primary">Login</button>
             </div>
           </div>
 
           {/* Page Content */}
           <main className="flex-1 overflow-y-auto bg-base-200 p-6">
-            <Outlet />
+            {children}
           </main>
         </div> 
         <div className="drawer-side">
@@ -66,18 +79,18 @@ const HomeLayout = () => {
                 <AiFillCloseCircle size={"24px"} />
               </button>
             </li>
-            <li className="mb-4 font-bold text-2xl text-primary">Donation Management</li>
-            <li><Link to="/" className="hover:bg-base-200">Home</Link></li>
-            <li><Link to="/donations" className="hover:bg-base-200">Donations</Link></li>
-            <li><Link to="/reports" className="hover:bg-base-200">Reports</Link></li>
-            <li><Link to="/contact" className="hover:bg-base-200">Contact Us</Link></li>
-            <li><Link to="/about" className="hover:bg-base-200">About Us</Link></li>
+            <li className="mb-4 font-bold text-2xl text-primary"></li>
+            <li><button onClick={() => handleNavigation('/')} className="hover:bg-base-200">Home</button></li>
+            <li><button onClick={() => handleNavigation('/donations')} className="hover:bg-base-200">Donations</button></li>
+            <li><button onClick={() => handleNavigation('/reports')} className="hover:bg-base-200">Reports</button></li>
+            <li><button onClick={() => handleNavigation('/contact')} className="hover:bg-base-200">Contact Us</button></li>
+            <li><button onClick={() => handleNavigation('/about')} className="hover:bg-base-200">About Us</button></li>
 
             <div className="mt-auto">
               <li>
                 <div className="w-full flex items-center justify-center gap-4 mt-6">
-                  <Link to="/login" className="btn btn-primary">Login</Link>
-                  <Link to="/signup" className="btn btn-secondary">Sign Up</Link>
+                  <button onClick={() => handleNavigation('/login')} className="btn btn-primary">Login</button>
+                  <button onClick={() => handleNavigation('/signup')} className="btn btn-secondary">Sign Up</button>
                 </div>
               </li>
             </div>
