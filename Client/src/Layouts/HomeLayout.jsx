@@ -1,7 +1,10 @@
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { FiMenu, FiMoon,FiSun } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import { logout } from '../Redux/Slices/AuthSlice';
 
 const HomeLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -9,7 +12,8 @@ const HomeLayout = ({ children }) => {
     return localStorage.getItem('theme') || 'light';
   });
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -43,6 +47,12 @@ const HomeLayout = ({ children }) => {
     hideDrawer();
   };
 
+  function handleLogout(e){
+    e.preventDefault();
+    dispatch(logout());
+    navigate('/');
+  }
+  
   return (
     <div className="min-h-[90vh] bg-base-200">
       <div className="drawer h-[100vh]">
@@ -56,13 +66,19 @@ const HomeLayout = ({ children }) => {
               </label>
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-primary">FundMate</h1>
+              <h1 className="text-2xl font-bold text-primary">PulsePoint</h1>
             </div>
             <div className="flex-none gap-2">
               <button onClick={toggleTheme} className="btn btn-ghost btn-circle">
                 {theme === 'light' ? <FiMoon size={"24px"} /> : <FiSun size={"24px"} />}
               </button>
-              <button onClick={() => handleNavigation('/login')} className="btn btn-ghost text-primary">Login</button>
+              {
+                isLoggedIn ? (
+                  <button onClick={() => handleNavigation('/profile')} className="btn btn-ghost text-primary">Profile</button>
+                ) : (
+                  <button onClick={() => handleNavigation('/login')} className="btn btn-ghost text-primary">Login</button>
+                )
+              }
             </div>
           </div>
 
@@ -89,8 +105,19 @@ const HomeLayout = ({ children }) => {
             <div className="mt-auto">
               <li>
                 <div className="w-full flex items-center justify-center gap-4 mt-6">
-                  <button onClick={() => handleNavigation('/login')} className="btn btn-primary">Login</button>
-                  <button onClick={() => handleNavigation('/signup')} className="btn btn-secondary">Sign Up</button>
+                  {
+                    isLoggedIn ? (
+                      <div className='flex items-center justify-center gap-4'>
+                        <button onClick={() => handleNavigation('/profile')} className="btn btn-primary">Profile</button>
+                        <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
+                      </div>
+                    ):(
+                      <div className='flex items-center justify-center gap-4'>
+                        <button onClick={() => handleNavigation('/login')} className="btn btn-primary">Login</button>
+                        <button onClick={() => handleNavigation('/signup')} className="btn btn-secondary">Sign Up</button>
+                      </div>
+                    )
+                  }
                 </div>
               </li>
             </div>

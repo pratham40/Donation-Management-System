@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { FiEye, FiEyeOff,FiLock, FiUser } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
 import HomeLayout from '../Layouts/HomeLayout';
+import { login } from '../Redux/Slices/AuthSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt with:', { email, password });
+    if(!email || !password){
+      toast.error('Please enter email and password');
+      return;
+    }
+    const res = await dispatch(login({email,password}));
+    if(res?.payload?.success){
+      navigate('/');
+    }
   };
 
   const togglePasswordVisibility = () => {

@@ -44,19 +44,22 @@ const userSchema = new Schema({
         min:18,
         max:60
     },
-    phoneNumber: {
-        type: Number,
-        required: [true, 'Phone number is required'],
-        unique: true,
-        match: [
-            /^(\+88)?-?01[3-9]\d{8}$/,
-            'Please enter a valid phone number',
-        ]
-    },
     role: {
         type: String,
         enum:['donor','admin'],
         default:'donor'
+    },
+    phoneNumber: {
+        type: String,
+        unique: true,
+        trim: true,
+        sparse: true,
+        validate: {
+            validator: function(v) {
+                return /^\+?([ -]?\d)+$/.test(v);
+            },
+            message: "Please enter a valid phone number"
+        },
     },
 },{
     timestamps:true

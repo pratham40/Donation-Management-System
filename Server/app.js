@@ -11,22 +11,19 @@ app.use(cookieParser());
 
 app.use(morgan('dev'));
 
-const corsOptions = {
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
-    methods: 'GET, POST, PUT, DELETE, OPTIONS',
+const corsOption={
+    origin:'http://localhost:5173',
+    credentials:true,
+    methods:['GET','POST','PUT','DELETE','OPTIONS']
 }
 
-app.use(cors(corsOptions));
+app.use(cors(corsOption));
 
+// Handle preflight requests
 app.options('*', cors());
-
-
 
 //user routes
 
 app.use("/api/v1/user",userRoutes)
-
-
 
 export default app;

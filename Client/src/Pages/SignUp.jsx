@@ -8,26 +8,29 @@ import HomeLayout from '../Layouts/HomeLayout';
 import { createAccount } from '../Redux/Slices/AuthSlice';
 
 const SignUp = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
-  const [signupData,setSignupData]=useState({
+  const [signupData, setSignupData] = useState({
     fullName: "",
     email: "",
     password: "",
-    avatar: "",
-    phoneNumber:"",
-    age:""
-  })
+    age: "",
+    avatar: ""
+  });
 
   const handleAvatarChange = (e) => {
+    e.preventDefault();
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => setAvatar(e.target.result);
-      reader.readAsDataURL(file);
+      setSignupData({...signupData,avatar:file})
     }
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.addEventListener("load", function () {
+      setAvatar(fileReader.result);
+    });
   };
 
   const togglePasswordVisibility = () => {
@@ -35,21 +38,23 @@ const SignUp = () => {
   };
 
   const handleOnChange = (e) => {
-    const {name, value, type, files} = e.target;
-    if(type === "file") {
-      handleAvatarChange(e);
-      setSignupData({...signupData, [name]: files[0]});
-    } else {
-      setSignupData({...signupData, [name]: value});
-    }
+    const { name, value } = e.target;
+    setSignupData({
+      ...signupData,
+      [name]: value,
+    });
   };
 
   async function handleSubmit(e) {
-    console.log("clicked");
-    
     e.preventDefault();
+    console.log('====================================');
+    console.log(signupData);
+    console.log('====================================');
 
-    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.avatar || !signupData.age || !signupData.phoneNumber) {
+    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.avatar || !signupData.age) {
+      console.log('====================================');
+      console.log("Please fill all the fields");
+      console.log('====================================');
       toast.error("Please fill all the fields");
       return;
     }
@@ -58,30 +63,30 @@ const SignUp = () => {
       toast.error("Name should be at least 5 characters");
       return;
     }
-    if (!signupData.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    if (!signupData.email.match(/^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/)) {
       toast.error("Invalid Email");
       return;
     }
-    if (!signupData.password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)) {
+    if (!signupData.password.match(/^(?:[A-Za-z\d]{8,})$/)) {
       toast.error("Password should be at least 8 characters and include at least one letter and one number");
       return;
     }
 
-    if (!signupData.phoneNumber.match("/09(0[1-2]|1[\d]|3[\d]|2[0-1])[\d]{3}[\d]{4}/g")) {
-      toast.error("invalid mobile no") 
-    }
-
+    console.log('====================================');
+    console.log(signupData.fullName);
+    console.log('====================================');
     const formData = new FormData();
     formData.append("fullName", signupData.fullName);
     formData.append("email", signupData.email);
     formData.append("password", signupData.password);
     formData.append("avatar", signupData.avatar);
-    formData.append("phoneNumber",signupData.phoneNumber)
-    formData.append("age",signupData.age)
+    formData.append("age", signupData.age);
 
     const response = await dispatch(createAccount(formData));
     if (response?.payload?.success) {
-      navigate("/");  
+      navigate("/");
+    }else{
+      toast.error("an error occurred while signing up please try again");
     }
 
     setSignupData({
@@ -89,8 +94,7 @@ const SignUp = () => {
       email: "",
       password: "",
       avatar: "",
-      phoneNumber:"",
-      age:""
+      age: ""
     });
     setAvatar("");
   }
@@ -146,20 +150,6 @@ const SignUp = () => {
 
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Phone Number</span>
-                </label>
-                <input 
-                  type="tel"
-                  name="phoneNumber" 
-                  placeholder="Enter your phone number" 
-                  className="input input-bordered w-full"
-                  value={signupData.phoneNumber}
-                  onChange={handleOnChange}
-                />
-              </div>
-
-              <div className="form-control w-full">
-                <label className="label">
                   <span className="label-text">Password</span>
                 </label>
                 <div className="relative">
@@ -204,7 +194,7 @@ const SignUp = () => {
                       type="file"
                       name="avatar" 
                       className="hidden" 
-                      onChange={handleOnChange}
+                      onChange={handleAvatarChange}
                       accept="image/*" 
                     />
                   </label>
@@ -212,7 +202,7 @@ const SignUp = () => {
               </div>
 
               <div className="form-control mt-6 sm:col-span-2">
-                <button className="btn btn-primary">Sign Up</button>
+                <button type='submit' className="btn btn-primary">Sign Up</button>
               </div>
             </form>
             <p className="text-center mt-4 sm:col-span-2">

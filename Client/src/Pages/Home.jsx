@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { FiBarChart2, FiHeart, FiUsers } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FiHeart, FiBarChart2, FiUsers } from 'react-icons/fi';
+
 import HomeLayout from '../Layouts/HomeLayout';
 import Footer from './Footer';
 
 const Home = () => {
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
+
   return (
     <HomeLayout>
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-center my-6 md:my-8">Welcome to Donation Management System</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-center my-6 md:my-8">Welcome to PulsePoint</h1>
         
         <div className="hero bg-base-200 rounded-lg shadow-xl p-4 md:p-8 mb-6 md:mb-8">
           <div className="hero-content text-center">
@@ -48,8 +53,16 @@ const Home = () => {
           <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Get Started Today</h2>
           <p className="mb-4 md:mb-6 text-sm md:text-base">Create an account to start making a difference or log in to continue your journey of giving.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
-            <Link to="/signup" className="btn btn-primary btn-sm md:btn-md">Sign Up</Link>
-            <Link to="/login" className="btn btn-secondary btn-sm md:btn-md">Login</Link>
+            {
+              isLoggedIn ? (
+                <Link to="/donations" className="btn btn-primary btn-sm md:btn-md">Donate Now</Link>
+              ) : (
+                <>
+                  <Link to="/signup" className="btn btn-primary btn-sm md:btn-md">Sign Up</Link>
+                  <Link to="/login" className="btn btn-secondary btn-sm md:btn-md">Login</Link>
+                </>
+              )
+            }
           </div>
         </div>
       </div>
