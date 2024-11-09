@@ -34,7 +34,19 @@ const SignUp = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleOnChange = (e) => {
+    const {name, value, type, files} = e.target;
+    if(type === "file") {
+      handleAvatarChange(e);
+      setSignupData({...signupData, [name]: files[0]});
+    } else {
+      setSignupData({...signupData, [name]: value});
+    }
+  };
+
   async function handleSubmit(e) {
+    console.log("clicked");
+    
     e.preventDefault();
 
     if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.avatar || !signupData.age || !signupData.phoneNumber) {
@@ -94,21 +106,56 @@ const SignUp = () => {
                 <label className="label">
                   <span className="label-text">Full Name</span>
                 </label>
-                <input type="text" placeholder="Enter your full name" className="input input-bordered w-full" />
+                <input 
+                  type="text" 
+                  name="fullName"
+                  placeholder="Enter your full name" 
+                  className="input input-bordered w-full"
+                  value={signupData.fullName}
+                  onChange={handleOnChange}
+                />
               </div>
 
               <div className="form-control w-full">
                 <label className="label">
                   <span className="label-text">Email</span>
                 </label>
-                <input type="email" placeholder="Enter your email" className="input input-bordered w-full" />
+                <input 
+                  type="email"
+                  name="email" 
+                  placeholder="Enter your email" 
+                  className="input input-bordered w-full"
+                  value={signupData.email}
+                  onChange={handleOnChange}
+                />
               </div>
 
               <div className="form-control w-full">
                 <label className="label">
                   <span className="label-text">Age</span>
                 </label>
-                <input type="number" placeholder="Enter your age" className="input input-bordered w-full" />
+                <input 
+                  type="number"
+                  name="age" 
+                  placeholder="Enter your age" 
+                  className="input input-bordered w-full"
+                  value={signupData.age}
+                  onChange={handleOnChange}
+                />
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Phone Number</span>
+                </label>
+                <input 
+                  type="tel"
+                  name="phoneNumber" 
+                  placeholder="Enter your phone number" 
+                  className="input input-bordered w-full"
+                  value={signupData.phoneNumber}
+                  onChange={handleOnChange}
+                />
               </div>
 
               <div className="form-control w-full">
@@ -118,8 +165,11 @@ const SignUp = () => {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     placeholder="Enter your password"
                     className="input input-bordered w-full pr-10"
+                    value={signupData.password}
+                    onChange={handleOnChange}
                   />
                   <button
                     type="button"
@@ -150,7 +200,13 @@ const SignUp = () => {
                   <label className="btn btn-outline btn-primary w-full sm:w-auto">
                     <FiUpload className="mr-2" />
                     Upload
-                    <input type="file" className="hidden" onChange={handleAvatarChange} accept="image/*" />
+                    <input 
+                      type="file"
+                      name="avatar" 
+                      className="hidden" 
+                      onChange={handleOnChange}
+                      accept="image/*" 
+                    />
                   </label>
                 </div>
               </div>
