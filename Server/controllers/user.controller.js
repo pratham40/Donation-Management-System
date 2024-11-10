@@ -119,6 +119,9 @@ const login = async (req, res, next) => {
         user.password = undefined;
 
         res.cookie("token", token, cookieOption);
+        console.log('====================================');
+        console.log(user);
+        console.log('====================================');
 
         res.status(200).json({
             success: true,
