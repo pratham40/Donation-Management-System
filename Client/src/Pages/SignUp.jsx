@@ -16,7 +16,7 @@ const SignUp = () => {
     fullName: "",
     email: "",
     password: "",
-    age: "",
+    dob: "",
     avatar: ""
   });
 
@@ -51,7 +51,7 @@ const SignUp = () => {
     console.log(signupData);
     console.log('====================================');
 
-    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.avatar || !signupData.age) {
+    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.avatar || !signupData.dob) {
       console.log('====================================');
       console.log("Please fill all the fields");
       console.log('====================================');
@@ -80,7 +80,7 @@ const SignUp = () => {
     formData.append("email", signupData.email);
     formData.append("password", signupData.password);
     formData.append("avatar", signupData.avatar);
-    formData.append("age", signupData.age);
+    formData.append("dob", signupData.dob);
 
     const response = await dispatch(createAccount(formData));
     if (response?.payload?.success) {
@@ -94,7 +94,7 @@ const SignUp = () => {
       email: "",
       password: "",
       avatar: "",
-      age: ""
+      dob: ""
     });
     setAvatar("");
   }
@@ -136,14 +136,14 @@ const SignUp = () => {
 
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Age</span>
+                  <span className="label-text">Date of Birth</span>
                 </label>
                 <input 
-                  type="number"
-                  name="age" 
-                  placeholder="Enter your age" 
+                  type="date"
+                  name="dob" 
+                  placeholder="Enter your date of birth" 
                   className="input input-bordered w-full"
-                  value={signupData.age}
+                  value={signupData.dob}
                   onChange={handleOnChange}
                 />
               </div>

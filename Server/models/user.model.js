@@ -38,11 +38,9 @@ const userSchema = new Schema({
 
         }
     },
-    age:{
-        type:Number,
-        required:[true,'Age is required'],
-        min:18,
-        max:60
+    dob:{
+        type: Date,
+        required:[true,'Date of Birth is required']
     },
     role: {
         type: String,

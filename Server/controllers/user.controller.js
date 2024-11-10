@@ -12,9 +12,9 @@ const cookieOption = {
 
 const register = async (req, res, next) => {
     try {
-        const { fullName, email, password, age } = req.body;
+        const { fullName, email, password, dob } = req.body;
     
-        if (!fullName || !email || !password || !age) {
+        if (!fullName || !email || !password || !dob) {
             return next(new AppError("All Field are required", 400));
         }
     
@@ -25,13 +25,22 @@ const register = async (req, res, next) => {
         }
 
         const role = req.body.role || "donor";
+
+        // Check if user is at least 18 years old
+
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        if (age < 18) {
+            return next(new AppError("User must be at least 18 years old", 400));
+        }
     
         const user = await User.create({
             fullName,
             email,
             password,
             role,
-            age,
+            dob,
             avatar: {
                 public_id: email,
                 secure_url:
